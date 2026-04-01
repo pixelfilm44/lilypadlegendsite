@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LilyPad Legend - A Charming Puzzle Adventure</title>
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --pond-dark: #0d1a2e;
+      --pond-mid: #132d4a;
+      --pond-light: #1a4066;
+      --lily-green: #4a9e3f;
+      --lily-bright: #6ec95e;
+      --frog-pink: #e87fa5;
+      --frog-hot: #d4567e;
+      --bee-yellow: #f5c842;
+      --snake-purple: #7b4fbf;
+      --water-blue: #2196c9;
+      --text-light: #e8f0f8;
+      --text-muted: #8ea8c4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DynaPuff', cursive;
+      background: var(--pond-dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* ===== ANIMATED WATER BACKGROUND ===== */
+    .water-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, #0a1628 0%, #0d2240 40%, #0f2a4d 70%, #132d4a 100%);
+    }
+
+    .water-bg::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 600px 200px at 20% 30%, rgba(33, 150, 201, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 800px 300px at 70% 60%, rgba(74, 158, 63, 0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 400px at 50% 80%, rgba(232, 127, 165, 0.03) 0%, transparent 70%);
+      animation: shimmer 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* ===== FLOATING LILYPADS (decorative) ===== */
+    .floating-pad {
+      position: fixed;
+      opacity: 0.06;
+      z-index: -1;
+      animation: floatPad 20s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .floating-pad:nth-child(1) { top: 10%; left: -5%; width: 200px; animation-delay: 0s; }
+    .floating-pad:nth-child(2) { top: 40%; right: -8%; width: 280px; animation-delay: -7s; animation-duration: 25s; }
+    .floating-pad:nth-child(3) { bottom: 15%; left: 10%; width: 160px; animation-delay: -14s; animation-duration: 22s; }
+    .floating-pad:nth-child(4) { top: 65%; left: -10%; width: 220px; animation-delay: -3s; animation-duration: 28s; }
+
+    @keyframes floatPad {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(15px, -20px) rotate(3deg); }
+      50% { transform: translate(-10px, 10px) rotate(-2deg); }
+      75% { transform: translate(20px, 15px) rotate(4deg); }
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 22, 40, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(33, 150, 201, 0.15);
+      transition: all 0.3s;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-light);
+    }
+
+    .nav-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .nav-logo span {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--lily-bright), var(--frog-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--lily-bright); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-light);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-title-img {
+      width: min(340px, 70vw);
+      max-height: 45vh;
+      object-fit: contain;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      animation: heroFloat 4s ease-in-out infinite;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--lily-bright) 0%, var(--frog-pink) 50%, var(--bee-yellow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-muted);
+      max-width: 550px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: linear-gradient(135deg, var(--lily-green), var(--lily-bright));
+      color: #fff;
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-family: 'DynaPuff', cursive;
+      font-size: 1.15rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(74, 158, 63, 0.35);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 40px rgba(74, 158, 63, 0.5);
+    }
+
+    .hero-cta svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      animation: bounce 2s ease-in-out infinite;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(8px); opacity: 1; }
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--frog-pink);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* ===== MEET THE CAST ===== */
+    #characters { text-align: center; }
+
+    .cast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .cast-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cast-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .cast-card:hover::before { opacity: 1; }
+
+    .cast-card:hover {
+      transform: translateY(-8px) rotate(-1deg);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .cast-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cast-card:hover img {
+      transform: scale(1.12) rotate(3deg);
+    }
+
+    .cast-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .cast-card .role {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .cast-card.frog h3 { color: var(--frog-pink); }
+    .cast-card.snake h3 { color: var(--snake-purple); }
+    .cast-card.bee h3 { color: var(--bee-yellow); }
+    .cast-card.log h3 { color: #b07848; }
+
+    /* ===== HOW TO PLAY ===== */
+    #gameplay { }
+
+    .gameplay-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .gameplay-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      transition: all 0.3s;
+    }
+
+    .gameplay-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .gameplay-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.6rem;
+    }
+
+    .gameplay-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .gameplay-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* ===== FEATURES SHOWCASE ===== */
+    #features { text-align: center; }
+
+    .features-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 3rem;
+      align-items: center;
+      text-align: left;
+    }
+
+    .features-row.reverse { direction: rtl; }
+    .features-row.reverse > * { direction: ltr; }
+
+    .feature-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .feature-visual .pond-scene {
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 1;
+      background: radial-gradient(ellipse at center, rgba(33, 150, 201, 0.15) 0%, transparent 70%);
+      border-radius: 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 8px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .pond-cell {
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .pond-cell img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .pond-cell.water {
+      background: rgba(33, 150, 201, 0.08);
+    }
+
+    .pond-cell.pad {
+      background: rgba(74, 158, 63, 0.12);
+    }
+
+    .feature-text h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-text p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag-green { background: rgba(74, 158, 63, 0.2); color: var(--lily-bright); }
+    .tag-pink { background: rgba(232, 127, 165, 0.2); color: var(--frog-pink); }
+    .tag-yellow { background: rgba(245, 200, 66, 0.2); color: var(--bee-yellow); }
+    .tag-blue { background: rgba(33, 150, 201, 0.2); color: var(--water-blue); }
+
+    /* ===== GAME ELEMENTS GRID ===== */
+    #elements { text-align: center; }
+
+    .elements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .element-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .element-card:hover {
+      transform: translateY(-5px) scale(1.03);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .element-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    .element-card h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .element-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    /* ===== VALUES / PHILOSOPHY ===== */
+    #values { text-align: center; }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .value-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .value-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.8rem;
+    }
+
+    .value-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .value-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    /* ===== COMMUNITY SECTION ===== */
+    #community {
+      text-align: center;
+    }
+
+    .community-showcase {
+      margin-top: 3rem;
+      background: linear-gradient(145deg, rgba(232, 127, 165, 0.08), rgba(123, 79, 191, 0.06));
+      border: 1px solid rgba(232, 127, 165, 0.12);
+      border-radius: 28px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .community-showcase::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(232, 127, 165, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .community-showcase h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .community-showcase p {
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .community-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .comm-feature {
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .comm-feature h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: var(--frog-pink);
+    }
+
+    .comm-feature p {
+      font-size: 0.8rem;
+      margin: 0;
+    }
+
+    /* ===== FINAL CTA ===== */
+    .final-cta {
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .final-cta-frog {
+      width: 140px;
+      margin-bottom: 1.5rem;
+      animation: heroFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.4));
+    }
+
+    .final-cta h2 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--lily-bright), var(--frog-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .final-cta p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+
+    footer a {
+      color: var(--frog-pink);
+      text-decoration: none;
+    }
+
+    /* ===== ANIMATIONS ON SCROLL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .features-row {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .features-row.reverse { direction: ltr; }
+      .community-features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        background: rgba(10, 22, 40, 0.95);
+        backdrop-filter: blur(12px);
+        padding: 1.5rem 2rem;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(33, 150, 201, 0.15);
+      }
+      .hamburger { display: flex; }
+      .cast-grid { grid-template-columns: repeat(2, 1fr); }
+      .elements-grid { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 4rem 1.25rem; }
+    }
+
+    @media (max-width: 420px) {
+      .cast-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===== LILYPAD RIPPLE CURSOR EFFECT ===== */
+    .ripple {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(110, 201, 94, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      animation: rippleOut 0.8s ease-out forwards;
+    }
+
+    @keyframes rippleOut {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Decorative floating lilypads -->
+  <div class="water-bg"></div>
+  <img src="assets/lilypad_normal.png" class="floating-pad" alt="" aria-hidden="true">
+  <img src="assets/lilypad_normal.png" class="floating-pad" alt="" aria-hidden="true">
+  <img src="assets/lilypad_normal.png" class="floating-pad" alt="" aria-hidden="true">
+  <img src="assets/lilypad_normal.png" class="floating-pad" alt="" aria-hidden="true">
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="assets/icon.png" alt="LilyPad Legend icon">
+      <span>LilyPad Legend</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#characters">Characters</a></li>
+      <li><a href="#gameplay">Gameplay</a></li>
+      <li><a href="#elements">Elements</a></li>
+      <li><a href="#community">Community</a></li>
+      <li><a href="#values">Our Promise</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <img src="assets/title_screen.png" class="hero-title-img" alt="LilyPad Legend title scene showing a pink frog on a lilypad surrounded by a snake and bees in a moonlit pond">
+    <h1>LilyPad Legend</h1>
+    <p>A charming claymation puzzle adventure. Guide your fearless frog across treacherous ponds, outsmart slithery snakes, and hop your way to victory!</p>
+    <a href="https://apps.apple.com/us/app/lilypad-legend/id6760921571" class="hero-cta" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+    <div class="hero-scroll-hint">Scroll to explore</div>
+  </section>
+
+  <!-- Meet the Cast -->
+  <section id="characters">
+    <span class="section-label reveal">Meet the Cast</span>
+    <h2 class="section-title reveal">Every Pond Needs Its Characters</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">Handcrafted in claymation style, each character brings personality and challenge to every level.</p>
+
+    <div class="cast-grid">
+      <div class="cast-card frog reveal">
+        <img src="assets/frog.png" alt="The Frog - a cute pink frog wearing an orange cap">
+        <h3>The Frog</h3>
+        <p class="role">That's you! A fearless pink adventurer with an eye for style and a talent for hopping.</p>
+      </div>
+      <div class="cast-card snake reveal">
+        <img src="assets/snake.png" alt="The Snake - a colorful purple and yellow snake">
+        <h3>The Snake</h3>
+        <p class="role">Slithers one space toward you each turn. Cunning, persistent, and very colorful.</p>
+      </div>
+      <div class="cast-card bee reveal">
+        <img src="assets/bee.png" alt="The Bee - a cute yellow and purple bee">
+        <h3>The Bee</h3>
+        <p class="role">Flies in all 8 directions, ignores terrain, and moves every other turn. Buzzy menace!</p>
+      </div>
+      <div class="cast-card log reveal">
+        <img src="assets/log.png" alt="The Log - a floating log">
+        <h3>The Log</h3>
+        <p class="role">Drifts lazily downstream each turn. Looks harmless. Isn't.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Play -->
+  <section id="gameplay">
+    <span class="section-label reveal">How to Play</span>
+    <h2 class="section-title reveal">Simple to Learn, Tricky to Master</h2>
+    <p class="section-subtitle reveal">Every hop counts. Plan your route, dodge your enemies, and reach the exit before your moves run out.</p>
+
+    <div class="gameplay-grid">
+      <div class="gameplay-card reveal">
+        <div class="gameplay-icon" style="background: rgba(110, 201, 94, 0.15);">
+          <img src="assets/frog.png" alt="" style="width: 40px; height: 40px; object-fit: contain;">
+        </div>
+        <div>
+          <h3 style="color: var(--lily-bright)">Hop Around</h3>
+          <p>Move your frog in 8 directions across lily pads. Each level gives you a limited number of hops, so plan carefully!</p>
+        </div>
+      </div>
+      <div class="gameplay-card reveal">
+        <div class="gameplay-icon" style="background: rgba(245, 200, 66, 0.15);">
+          <img src="assets/goal_pad.png" alt="" style="width: 40px; height: 40px; object-fit: contain;">
+        </div>
+        <div>
+          <h3 style="color: var(--bee-yellow)">Hit Your Goals</h3>
+          <p>Visit numbered goal pads in order &mdash; 1, 2, 3 &mdash; before heading to the exit. Sequence matters!</p>
+        </div>
+      </div>
+      <div class="gameplay-card reveal">
+        <div class="gameplay-icon" style="background: rgba(123, 79, 191, 0.15);">
+          <img src="assets/snake.png" alt="" style="width: 40px; height: 40px; object-fit: contain;">
+        </div>
+        <div>
+          <h3 style="color: var(--snake-purple)">Outsmart Enemies</h3>
+          <p>Snakes pursue you, bees patrol the skies, and logs drift through the water. Every move they react!</p>
+        </div>
+      </div>
+      <div class="gameplay-card reveal">
+        <div class="gameplay-icon" style="background: rgba(232, 127, 165, 0.15);">
+          <img src="assets/final_pad.png" alt="" style="width: 40px; height: 40px; object-fit: contain;">
+        </div>
+        <div>
+          <h3 style="color: var(--frog-pink)">Reach the Exit</h3>
+          <p>After collecting all goals, hop to the final pad to complete the level. Sweet victory!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features rows -->
+    <div class="features-row reveal" style="margin-top: 5rem;">
+      <div class="feature-visual">
+        <div class="pond-scene">
+          <div class="pond-cell pad"><img src="assets/lilypad_normal.png" alt=""></div>
+          <div class="pond-cell pad"><img src="assets/lilypad_normal.png" alt=""></div>
+          <div class="pond-cell water"></div>
+          <div class="pond-cell pad"><img src="assets/goal_pad.png" alt=""></div>
+          <div class="pond-cell water"></div>
+          <div class="pond-cell pad"><img src="assets/switch_pad.png" alt=""></div>
+          <div class="pond-cell pad"><img src="assets/lilypad_oneuse.png" alt=""></div>
+          <div class="pond-cell water"></div>
+          <div class="pond-cell pad"><img src="assets/lilypad_normal.png" alt=""></div>
+          <div class="pond-cell water"></div>
+          <div class="pond-cell pad"><img src="assets/bridge_active.png" alt=""></div>
+          <div class="pond-cell pad"><img src="assets/lilypad_normal.png" alt=""></div>
+          <div class="pond-cell pad"><img src="assets/trampoline.png" alt=""></div>
+          <div class="pond-cell pad"><img src="assets/lilypad_normal.png" alt=""></div>
+          <div class="pond-cell water"></div>
+          <div class="pond-cell pad"><img src="assets/final_pad.png" alt=""></div>
+        </div>
+      </div>
+      <div class="feature-text">
+        <h3>A World of Interactive Elements</h3>
+        <p>Every level is a unique puzzle built from a toolbox of interactive tiles. One-use pads sink behind you, switches toggle bridges, and trampolines launch you across the board. Each element adds a new layer of strategy.</p>
+        <span class="feature-tag tag-green">Switches &amp; Bridges</span>
+        <span class="feature-tag tag-pink">One-Use Pads</span>
+        <span class="feature-tag tag-yellow">Trampolines</span>
+        <span class="feature-tag tag-blue">Dynamic Enemies</span>
+      </div>
+    </div>
+
+    <div class="features-row reverse reveal" style="margin-top: 4rem;">
+      <div class="feature-visual">
+        <img src="assets/winter_frog.png" alt="Winter frog variant" style="width: 200px; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.4)); animation: heroFloat 5s ease-in-out infinite;">
+      </div>
+      <div class="feature-text">
+        <h3>Seasonal Themes</h3>
+        <p>Journey through different environments as you progress. Snow-covered ponds bring frosty visuals and cozy winter outfits for the whole cast. Night levels add mystery with moonlit waters and fireflies.</p>
+        <span class="feature-tag tag-blue">Snow Levels</span>
+        <span class="feature-tag tag-pink">Night Mode</span>
+        <span class="feature-tag tag-green">20+ Backgrounds</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Elements -->
+  <section id="elements">
+    <span class="section-label reveal">Puzzle Toolbox</span>
+    <h2 class="section-title reveal">Master Every Element</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">Each tile type adds a strategic layer. Learn them all to conquer the trickiest puzzles.</p>
+
+    <div class="elements-grid">
+      <div class="element-card reveal">
+        <img src="assets/lilypad_normal.png" alt="Lily Pad">
+        <h4>Lily Pad</h4>
+        <p>Your basic stepping stone. Hop freely!</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/lilypad_oneuse.png" alt="One-Use Pad">
+        <h4>One-Use Pad</h4>
+        <p>Sinks after you leave. No going back!</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/goal_pad.png" alt="Goal Pad">
+        <h4>Goal Pad</h4>
+        <p>Visit these in order to unlock the exit.</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/final_pad.png" alt="Final Pad">
+        <h4>Exit Pad</h4>
+        <p>Your destination. Reach it to win!</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/switch_pad.png" alt="Switch">
+        <h4>Switch</h4>
+        <p>Toggles bridges on and off.</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/bridge_active.png" alt="Bridge">
+        <h4>Bridge</h4>
+        <p>Crossable only when activated.</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/trampoline.png" alt="Trampoline">
+        <h4>Trampoline</h4>
+        <p>Launches you 2 squares. Boing!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section id="community">
+    <span class="section-label reveal">Infinite Levels</span>
+    <h2 class="section-title reveal">Build. Share. Play.</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">Finished the campaign? The fun is just beginning. Create your own levels and share them with the world.</p>
+
+    <div class="community-showcase reveal">
+      <h3>Level Editor & Community Hub</h3>
+      <p>Design devious puzzles with the full-featured in-app level editor, then publish them for everyone to play. Browse and rate levels from other players for endless content.</p>
+      <div class="community-features">
+        <div class="comm-feature">
+          <h4>Design</h4>
+          <p>Full editor with every game element. Place pads, enemies, goals, and more.</p>
+        </div>
+        <div class="comm-feature">
+          <h4>Share</h4>
+          <p>Publish your creations to the community with one tap.</p>
+        </div>
+        <div class="comm-feature">
+          <h4>Discover</h4>
+          <p>Browse, play, and rate levels made by players around the world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Promise -->
+  <section id="values">
+    <span class="section-label reveal">Our Promise</span>
+    <h2 class="section-title reveal">Games Should Enhance Your Life</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">We believe in four pillars of great game design. No dark patterns. No manipulation. Just pure puzzle joy.</p>
+
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon" style="background: rgba(110, 201, 94, 0.12); color: var(--lily-bright);">
+          <span>&#9729;</span>
+        </div>
+        <h3>Escape Reality</h3>
+        <p>Dive into a whimsical claymation world that feels like a cozy escape from everyday life.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon" style="background: rgba(232, 127, 165, 0.12); color: var(--frog-pink);">
+          <span>&#10024;</span>
+        </div>
+        <h3>Enhance Lives</h3>
+        <p>Every session should leave you feeling better. We respect your time, your wallet, and your wellbeing.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon" style="background: rgba(245, 200, 66, 0.12); color: var(--bee-yellow);">
+          <span>&#9881;</span>
+        </div>
+        <h3>Stretch Your Brain</h3>
+        <p>Genuinely challenging puzzles that reward creative thinking. No artificial difficulty spikes.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon" style="background: rgba(123, 79, 191, 0.12); color: var(--snake-purple);">
+          <span>&#9825;</span>
+        </div>
+        <h3>Connect People</h3>
+        <p>Share levels, challenge friends, and be part of a creative community of puzzle lovers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <div class="final-cta">
+    <img src="assets/frog.png" class="final-cta-frog reveal" alt="The adorable pink frog">
+    <h2 class="reveal">Ready to Make Your First Hop?</h2>
+    <p class="reveal">Join our little frog on a puzzle adventure unlike anything you've played before. No ads. No paywalls. Just pure, handcrafted fun.</p>
+    <a href="https://apps.apple.com/us/app/lilypad-legend/id6760921571" class="hero-cta reveal" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 LilyPad Legend. Handcrafted with love by <a href="#">Jeff Imagines</a>. No frogs were harmed.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal animation
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Mobile nav toggle
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navLinks').classList.remove('open');
+      });
+    });
+
+    // Fun ripple effect on click
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = (e.clientX - 15) + 'px';
+      ripple.style.top = (e.clientY - 15) + 'px';
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 800);
+    });
+  </script>
+</body>
+</html>
