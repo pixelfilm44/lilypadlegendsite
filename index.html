@@ -347,6 +347,8 @@
     .cast-card.snake h3 { color: var(--snake-purple); }
     .cast-card.bee h3 { color: var(--bee-yellow); }
     .cast-card.log h3 { color: #b07848; }
+    .cast-card.tadpole-hero h3 { color: var(--frog-pink); }
+    .cast-card.tadpole-bro h3 { color: #b07fe8; }
 
     /* ===== HOW TO PLAY ===== */
     #gameplay { }
@@ -734,6 +736,124 @@
       .cast-grid { grid-template-columns: 1fr; }
     }
 
+    /* ===== TADPOLE ORIGIN SECTION ===== */
+    .tadpole-origin {
+      text-align: center;
+      position: relative;
+    }
+
+    .tadpole-origin .origin-showcase {
+      margin-top: 3rem;
+      background: linear-gradient(145deg, rgba(100, 180, 255, 0.08), rgba(176, 127, 232, 0.06));
+      border: 1px solid rgba(100, 180, 255, 0.12);
+      border-radius: 28px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tadpole-origin .origin-showcase::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(100, 180, 255, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .origin-characters {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .origin-character {
+      text-align: center;
+    }
+
+    .origin-character img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .origin-character img:hover {
+      transform: scale(1.1) rotate(-3deg);
+    }
+
+    .origin-character p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+
+    .origin-vs {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .origin-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .origin-detail {
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .origin-detail h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: #7fc4fd;
+    }
+
+    .origin-detail p {
+      font-size: 0.8rem;
+      margin: 0;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    @media (max-width: 700px) {
+      .origin-details { grid-template-columns: 1fr; }
+    }
+
+    /* ===== GAMEPLAY VIDEO ===== */
+    .video-section {
+      text-align: center;
+    }
+
+    .video-container {
+      margin-top: 3rem;
+      position: relative;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .video-container video {
+      width: 100%;
+      display: block;
+    }
+
     /* ===== LILYPAD RIPPLE CURSOR EFFECT ===== */
     .ripple {
       position: fixed;
@@ -769,8 +889,9 @@
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#characters">Characters</a></li>
+      <li><a href="#tadpole">Tadpole</a></li>
+      <li><a href="#video">Video</a></li>
       <li><a href="#gameplay">Gameplay</a></li>
-      <li><a href="#elements">Elements</a></li>
       <li><a href="#community">Community</a></li>
       <li><a href="#values">Our Promise</a></li>
     </ul>
@@ -817,6 +938,67 @@
         <h3>The Log</h3>
         <p class="role">Drifts lazily downstream each turn. Looks harmless. Isn't.</p>
       </div>
+      <div class="cast-card tadpole-hero reveal">
+        <img src="assets/tadpole_hero.png" alt="The Tadpole Hero - a cute pink tadpole wearing an orange cap">
+        <h3>The Tadpole</h3>
+        <p class="role">Before the frog, there was a tadpole. Where every legend begins.</p>
+      </div>
+      <div class="cast-card tadpole-bro reveal">
+        <img src="assets/tadpole_bro.png" alt="The Tadpole Bro - a purple tadpole with a pink mohawk">
+        <h3>The Bro</h3>
+        <p class="role">Your elusive buddy. Catch him before night falls &mdash; if you can!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tadpole Origin Story -->
+  <section class="tadpole-origin" id="tadpole">
+    <span class="section-label reveal">Origin Story</span>
+    <h2 class="section-title reveal">Every Legend Starts Small</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">Before the lily pads and the puzzles, you were just a little tadpole looking for a friend.</p>
+
+    <div class="origin-showcase reveal">
+      <div class="origin-characters">
+        <div class="origin-character">
+          <img src="assets/tadpole_hero.png" alt="Tadpole Hero">
+          <p style="color: var(--frog-pink);">You</p>
+        </div>
+        <div class="origin-vs">vs</div>
+        <div class="origin-character">
+          <img src="assets/tadpole_bro.png" alt="Tadpole Bro">
+          <p style="color: #b07fe8;">The Bro</p>
+        </div>
+      </div>
+      <h3>Tadpole Levels</h3>
+      <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem; font-weight: 400;">The adventure begins underwater! Swim freely in any direction, dodge rocks, and catch your elusive buddy before night falls. But watch out &mdash; lily pads hide you both!</p>
+      <div class="origin-details">
+        <div class="origin-detail">
+          <h4>Swim Freely</h4>
+          <p>Move in all 8 directions through open water. No pads required!</p>
+        </div>
+        <div class="origin-detail">
+          <h4>Chase &amp; Catch</h4>
+          <p>Your buddy flees with clever AI. Corner him before your moves run out.</p>
+        </div>
+        <div class="origin-detail">
+          <h4>Hide &amp; Seek</h4>
+          <p>Lily pads hide whoever swims under them. Use stealth to your advantage!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gameplay Video -->
+  <section class="video-section" id="video">
+    <span class="section-label reveal">See It in Action</span>
+    <h2 class="section-title reveal">Watch the Gameplay</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">From tadpole to frog, from simple hops to brain-bending puzzles.</p>
+
+    <div class="video-container reveal">
+      <video controls preload="metadata" poster="assets/title_screen.png">
+        <source src="assets/gameplay.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
   </section>
 
@@ -952,6 +1134,11 @@
         <img src="assets/trampoline.png" alt="Trampoline">
         <h4>Trampoline</h4>
         <p>Launches you 2 squares. Boing!</p>
+      </div>
+      <div class="element-card reveal">
+        <img src="assets/rock.png" alt="Rock">
+        <h4>Rock</h4>
+        <p>Impassable obstacle. Swim around it!</p>
       </div>
     </div>
   </section>
