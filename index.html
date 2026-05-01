@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LilyPad Legend - A Charming Puzzle Adventure</title>
+  <title>LilyPad Legend — The Mobile Puzzle Game That Respects You</title>
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="LilyPad Legend - A Charming Puzzle Adventure">
-  <meta property="og:description" content="A charming claymation puzzle adventure. Guide your fearless frog across treacherous ponds, outsmart slithery snakes, and hop your way to victory!">
+  <meta property="og:title" content="LilyPad Legend — The Mobile Puzzle Game That Respects You">
+  <meta property="og:description" content="No ads. No timers. No dark patterns. Free to play, with cave level packs you unlock once and keep forever. Turn-based frog puzzles for people who actually want a challenge.">
   <meta property="og:image" content="https://www.lilypadlegend.com/assets/title_screen.png">
   <meta property="og:url" content="https://www.lilypadlegend.com">
   <meta property="og:site_name" content="LilyPad Legend">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LilyPad Legend - A Charming Puzzle Adventure">
-  <meta name="twitter:description" content="A charming claymation puzzle adventure. Guide your fearless frog across treacherous ponds, outsmart slithery snakes, and hop your way to victory!">
+  <meta name="twitter:title" content="LilyPad Legend — The Mobile Puzzle Game That Respects You">
+  <meta name="twitter:description" content="No ads. No timers. No dark patterns. Free to play, with cave level packs you unlock once and keep forever. Turn-based frog puzzles for people who actually want a challenge.">
   <meta name="twitter:image" content="https://www.lilypadlegend.com/assets/title_screen.png">
 
   <!-- General Meta -->
-  <meta name="description" content="A charming claymation puzzle adventure. Guide your fearless frog across treacherous ponds, outsmart slithery snakes, and hop your way to victory!">
+  <meta name="description" content="No ads. No timers. No dark patterns. Free to play, with cave level packs you unlock once and keep forever. Turn-based frog puzzles for people who actually want a challenge.">
 
   <link rel="icon" type="image/png" href="assets/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,6 +249,15 @@
 
     .app-store-badge img {
       display: block;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2.2vw, 1.2rem) !important;
+      font-weight: 600 !important;
+      color: var(--lily-bright) !important;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem !important;
+      opacity: 0.9;
     }
 
     .hero-scroll-hint {
@@ -872,6 +881,165 @@
       display: block;
     }
 
+    /* ===== TRUST STRIP ===== */
+    .trust-strip {
+      background: rgba(110, 201, 94, 0.06);
+      border-top: 1px solid rgba(110, 201, 94, 0.12);
+      border-bottom: 1px solid rgba(110, 201, 94, 0.12);
+      padding: 1rem 2rem;
+      overflow: hidden;
+    }
+
+    .trust-strip-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--lily-bright);
+      white-space: nowrap;
+    }
+
+    .trust-icon { font-size: 1rem; }
+
+    .trust-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(110, 201, 94, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      .trust-divider { display: none; }
+      .trust-strip-inner { gap: 1rem; }
+    }
+
+    /* ===== CAVE LEVELS SECTION ===== */
+    .cave-section {
+      text-align: center;
+      position: relative;
+    }
+
+    .cave-showcase {
+      margin-top: 3rem;
+      background: linear-gradient(145deg, rgba(30, 10, 60, 0.6), rgba(15, 30, 60, 0.5));
+      border: 1px solid rgba(123, 79, 191, 0.2);
+      border-radius: 28px;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cave-showcase::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(123, 79, 191, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cave-showcase::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(245, 200, 66, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cave-items {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .cave-item {
+      text-align: center;
+    }
+
+    .cave-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(123, 79, 191, 0.4));
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cave-item img:hover { transform: scale(1.12) rotate(-4deg); }
+
+    .cave-item-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+      color: var(--bee-yellow);
+    }
+
+    .cave-item-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      font-weight: 400;
+      max-width: 120px;
+    }
+
+    .cave-powerups {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .cave-power {
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(123, 79, 191, 0.12);
+      text-align: left;
+    }
+
+    .cave-power h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: var(--bee-yellow);
+    }
+
+    .cave-power p {
+      font-size: 0.8rem;
+      margin: 0;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .cave-flare {
+      position: absolute;
+      top: -40px;
+      right: -20px;
+      width: 220px;
+      opacity: 0.18;
+      pointer-events: none;
+      filter: blur(2px);
+      mix-blend-mode: screen;
+    }
+
+    @media (max-width: 600px) {
+      .cave-powerups { grid-template-columns: 1fr; }
+      .cave-items { gap: 1.5rem; }
+      .cave-flare { width: 140px; top: -20px; right: -10px; }
+    }
+
     /* ===== LILYPAD RIPPLE CURSOR EFFECT ===== */
     .ripple {
       position: fixed;
@@ -907,7 +1075,8 @@
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#characters">Characters</a></li>
-      <li><a href="#tadpole">Tadpole</a></li>
+      <li><a href="#tadpole">Origin</a></li>
+      <li><a href="#cave">Cave Levels</a></li>
       <li><a href="#video">Video</a></li>
       <li><a href="#gameplay">Gameplay</a></li>
       <li><a href="#community">Community</a></li>
@@ -922,12 +1091,28 @@
   <section class="hero">
     <img src="assets/title_screen.png" class="hero-title-img" alt="LilyPad Legend title scene showing a pink frog on a lilypad surrounded by a snake and bees in a moonlit pond">
     <h1>LilyPad Legend</h1>
-    <p>A charming claymation puzzle adventure. Guide your fearless frog across treacherous ponds, outsmart slithery snakes, and hop your way to victory!</p>
+    <p class="hero-tagline">The mobile puzzle game that respects you.</p>
+    <p>Think you can outsmart a snake? A bee? A drifting log? Every hop is a decision. Every level is a puzzle. No ads. No timers. No nonsense.</p>
     <a href="https://apps.apple.com/us/app/lilypad-legend/id6760921571" class="app-store-badge" target="_blank" rel="noopener">
       <img src="assets/Download_on_the_App_Store.svg" alt="Download on the App Store" height="54">
     </a>
     <div class="hero-scroll-hint">Scroll to explore</div>
   </section>
+
+  <!-- Trust strip -->
+  <div class="trust-strip">
+    <div class="trust-strip-inner">
+      <div class="trust-item"><span class="trust-icon">🚫</span><span>Zero Ads</span></div>
+      <div class="trust-divider"></div>
+      <div class="trust-item"><span class="trust-icon">⏱️</span><span>Zero Timers</span></div>
+      <div class="trust-divider"></div>
+      <div class="trust-item"><span class="trust-icon">🧩</span><span>18+ Free Levels</span></div>
+      <div class="trust-divider"></div>
+      <div class="trust-item"><span class="trust-icon">🌍</span><span>Infinite Community Levels</span></div>
+      <div class="trust-divider"></div>
+      <div class="trust-item"><span class="trust-icon">🕯️</span><span>Cave Packs — One-Time Unlock</span></div>
+    </div>
+  </div>
 
   <!-- Meet the Cast -->
   <section id="characters">
@@ -1001,6 +1186,61 @@
         <div class="origin-detail">
           <h4>Hide &amp; Seek</h4>
           <p>Lily pads hide whoever swims under them. Use stealth to your advantage!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cave Levels -->
+  <section class="cave-section" id="cave">
+    <span class="section-label reveal">Cave Level Packs</span>
+    <h2 class="section-title reveal">Things Get Dark Down Here</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">Unlock the cave level packs once and they're yours forever. New mechanics, new threats, and two power-ups you won't see coming.</p>
+
+    <div class="cave-showcase reveal">
+      <img src="assets/flare.png" alt="" aria-hidden="true" class="cave-flare">
+      <div class="cave-items">
+        <div class="cave-item">
+          <img src="assets/bee.png" alt="Bee">
+          <div class="cave-item-label">Angry Bees</div>
+          <div class="cave-item-desc">Fly in all directions. No terrain can stop them.</div>
+        </div>
+        <div class="cave-item">
+          <img src="assets/honeyjar.png" alt="Honey Jar power-up">
+          <div class="cave-item-label" style="color: var(--bee-yellow);">Honey Jar</div>
+          <div class="cave-item-desc">Drop it. Every bee forgets about you instantly.</div>
+        </div>
+        <div class="cave-item">
+          <img src="assets/superpowercape.png" alt="Superpower Cape power-up">
+          <div class="cave-item-label" style="color: #f5c842;">Superpower Cape</div>
+          <div class="cave-item-desc">Two enemy knocks before the power wears off.</div>
+        </div>
+        <div class="cave-item">
+          <img src="assets/snake.png" alt="Snake">
+          <div class="cave-item-label" style="color: var(--snake-purple);">Snakes + Bees</div>
+          <div class="cave-item-desc">Both hunting you. Different patterns. One board.</div>
+        </div>
+      </div>
+
+      <h3 style="margin-bottom: 0.75rem;">Power-Ups Hidden in the Dark</h3>
+      <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem; font-weight: 400;">Cave levels hide two secret items on the board. Find them. Use them at the right moment. The bees don't forgive mistakes.</p>
+
+      <div class="cave-powerups">
+        <div class="cave-power">
+          <h4>🍯 Honey Jar</h4>
+          <p>Drop it on the board and every bee stops chasing you — they beeline for the honey instead. Buys you precious moves.</p>
+        </div>
+        <div class="cave-power">
+          <h4>🦸 Superpower Cape</h4>
+          <p>Activate it and become Superfrog. Stomp enemies off the board on contact — twice — before it wears off.</p>
+        </div>
+        <div class="cave-power">
+          <h4>🌑 Cave Atmosphere</h4>
+          <p>A fully unique visual theme: dark tunnels, underground water, and bioluminescent vibes.</p>
+        </div>
+        <div class="cave-power">
+          <h4>🔦 Find Them First</h4>
+          <p>Items spawn on hidden tiles. Stumble across them mid-puzzle — or plan your route to grab one before the bees close in.</p>
         </div>
       </div>
     </div>
@@ -1187,37 +1427,37 @@
   <!-- Our Promise -->
   <section id="values">
     <span class="section-label reveal">Our Promise</span>
-    <h2 class="section-title reveal">Games Should Enhance Your Life</h2>
-    <p class="section-subtitle reveal" style="margin: 0 auto;">We believe in four pillars of great game design. No dark patterns. No manipulation. Just pure puzzle joy.</p>
+    <h2 class="section-title reveal">We Built This Different</h2>
+    <p class="section-subtitle reveal" style="margin: 0 auto;">No ads. No energy timers. No "watch a video to continue." Just a game that respects you.</p>
 
     <div class="values-grid">
       <div class="value-card reveal">
         <div class="value-icon" style="background: rgba(110, 201, 94, 0.12); color: var(--lily-bright);">
-          <span>&#9729;</span>
+          <span>🧠</span>
         </div>
-        <h3>Escape Reality</h3>
-        <p>Dive into a whimsical claymation world that feels like a cozy escape from everyday life.</p>
+        <h3>Actually Hard</h3>
+        <p>Puzzles that will genuinely make you pause. The satisfaction of cracking a tough level hits different when you earned it.</p>
       </div>
       <div class="value-card reveal">
         <div class="value-icon" style="background: rgba(232, 127, 165, 0.12); color: var(--frog-pink);">
-          <span>&#10024;</span>
+          <span>🚫</span>
         </div>
-        <h3>Enhance Lives</h3>
-        <p>Every session should leave you feeling better. We respect your time, your wallet, and your wellbeing.</p>
+        <h3>Zero Manipulation</h3>
+        <p>No ads. No energy timers. No dark patterns. No fake countdowns. Cave levels unlock once and are yours forever. We respect your time and your wallet — full stop.</p>
       </div>
       <div class="value-card reveal">
         <div class="value-icon" style="background: rgba(245, 200, 66, 0.12); color: var(--bee-yellow);">
-          <span>&#9881;</span>
+          <span>🎨</span>
         </div>
-        <h3>Stretch Your Brain</h3>
-        <p>Genuinely challenging puzzles that reward creative thinking. No artificial difficulty spikes.</p>
+        <h3>Create & Share</h3>
+        <p>Build your own levels with the in-app editor and drop them into the community. Your puzzle, your rules.</p>
       </div>
       <div class="value-card reveal">
         <div class="value-icon" style="background: rgba(123, 79, 191, 0.12); color: var(--snake-purple);">
-          <span>&#9825;</span>
+          <span>♾️</span>
         </div>
-        <h3>Connect People</h3>
-        <p>Share levels, challenge friends, and be part of a creative community of puzzle lovers.</p>
+        <h3>Infinite Content</h3>
+        <p>18+ campaign levels plus an endless stream of community-made puzzles. There's always a new challenge waiting.</p>
       </div>
     </div>
   </section>
@@ -1225,8 +1465,8 @@
   <!-- Final CTA -->
   <div class="final-cta">
     <img src="assets/frog.png" class="final-cta-frog reveal" alt="The adorable pink frog">
-    <h2 class="reveal">Ready to Make Your First Hop?</h2>
-    <p class="reveal">Join our little frog on a puzzle adventure unlike anything you've played before. No ads. No paywalls. Just pure, crafted fun.</p>
+    <h2 class="reveal">Your Brain Called. It Wants a Challenge.</h2>
+    <p class="reveal">Free on iOS. No ads. No timers. No subscriptions. Just you, a frog, and a series of increasingly devious puzzles — with cave level packs available to unlock once and keep forever.</p>
     <a href="https://apps.apple.com/us/app/lilypad-legend/id6760921571" class="app-store-badge reveal" target="_blank" rel="noopener">
       <img src="assets/Download_on_the_App_Store.svg" alt="Download on the App Store" height="54">
     </a>
